@@ -1,0 +1,27 @@
+# Site settings
+title: Elevating Software Quality
+description: >-
+  Discover how AI and modern tools are transforming software quality assurance,
+  testing, and development practices for better, faster, and more reliable software.
+baseurl: ""
+url: ""
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Navigation
+header_pages:
+  - index.md
+  - about.md
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - README.md
+  - LICENSE
