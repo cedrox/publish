@@ -1,0 +1,257 @@
+# Publish (cedrox/publish) Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-10-30
+
+## Active Technologies
+
+### Python 3.11+
+
+- **Purpose**: Excel file parsing and JSON generation
+- **Libraries**:
+  - `openpyxl ^3.1.0`: Excel (.xlsx) file parsing, table extraction, formula evaluation
+  - `json` (built-in): JSON serialization
+
+### GitHub Actions
+
+- **Purpose**: CI/CD automation for Excel-to-JSON conversion
+- **Workflow Events**: `push` (with path filters), `workflow_dispatch`
+- **Runners**: `ubuntu-latest`
+- **Actions Used**:
+  - `actions/checkout@v4`: Repository checkout
+  - `actions/setup-python@v5`: Python environment setup
+
+### Jekyll 3.x
+
+- **Purpose**: Static site generation for GitHub Pages
+- **Content**: Software quality blog and documentation
+
+### JSON
+
+- **Purpose**: Data exchange format for website consumption
+- **Structure**: Flat array of objects
+- **Schema**: JSON Schema Draft 07
+- **Location**: `/data/tools.json`
+
+## Project Structure
+
+```text
+publish/
+├── .github/
+│   ├── .specify/
+│   │   ├── memory/
+│   │   │   ├── constitution.md        # Project governance (v1.0.0)
+│   │   │   └── .copilot               # Agent context (this file)
+│   │   ├── scripts/
+│   │   │   └── powershell/
+│   │   │       └── update-agent-context.ps1
+│   │   └── templates/
+│   │       ├── agent-file-template.md
+│   │       └── plan-template.md
+│   └── workflows/
+│       └── excel-to-json.yml          # [Planned] GitHub Actions workflow
+├── data/
+│   ├── QA.xlsx                        # Source: Excel database (worksheet "Tools", table "Tools")
+│   └── tools.json                     # Output: Generated JSON (auto-updated by workflow)
+├── scripts/
+│   └── excel-to-json.py               # [Planned] Python conversion script
+├── specs/
+│   └── 001-excel-json-api/
+│       ├── spec.md                    # Feature specification
+│       ├── plan.md                    # Implementation plan
+│       ├── research.md                # Technology decisions (Phase 0)
+│       ├── data-model.md              # Data structure (Phase 1)
+│       ├── quickstart.md              # Developer guide (Phase 1)
+│       ├── checklists/
+│       │   └── requirements.md        # Quality validation
+│       └── contracts/
+│           └── tools-schema.json      # JSON Schema (Phase 1)
+├── _posts/                            # Jekyll blog posts
+├── _layouts/                          # Jekyll templates
+├── assets/                            # Static assets (CSS, images)
+└── index.md                           # Site homepage
+```
+
+## Commands
+
+### Python Development
+
+```bash
+# Install dependencies
+pip install openpyxl
+
+# Run conversion script locally
+python scripts/excel-to-json.py
+
+# Validate JSON output
+python -m json.tool data/tools.json
+
+# Install dev dependencies
+pip install pytest jsonschema
+
+# Run tests (when implemented)
+pytest tests/
+```
+
+### Git Workflow
+
+```bash
+# Create feature branch
+git checkout -b 001-excel-json-api
+
+# Commit Excel and JSON together
+git add data/QA.xlsx data/tools.json
+git commit -m "feat: update tools data"
+
+# Push and trigger workflow
+git push origin 001-excel-json-api
+```
+
+### GitHub Actions Commands
+
+```bash
+# Manually trigger workflow (requires GitHub CLI)
+gh workflow run excel-to-json.yml
+
+# View workflow logs
+gh run list
+gh run view <run-id>
+```
+
+## Code Style
+
+### Python (PEP 8)
+
+- **Indentation**: 4 spaces
+- **Line Length**: 88 characters (Black formatter)
+- **Imports**: Standard library → third-party → local
+- **Type Hints**: Use for function signatures
+- **Docstrings**: Google style
+
+**Example**:
+
+```python
+from openpyxl import load_workbook
+import json
+from datetime import datetime
+
+def extract_tools(excel_path: str) -> list[dict]:
+    """Extract tool records from Excel table.
+    
+    Args:
+        excel_path: Path to QA.xlsx file
+        
+    Returns:
+        List of tool dictionaries with field names as keys
+    """
+    workbook = load_workbook(excel_path, data_only=True)
+    # ... implementation
+```
+
+### YAML (GitHub Actions)
+
+- **Indentation**: 2 spaces
+- **Quotes**: Use single quotes for strings (unless escaping needed)
+- **Comments**: Explain non-obvious steps
+
+**Example**:
+
+```yaml
+name: Excel to JSON Conversion
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/QA.xlsx'
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate JSON
+        continue-on-error: true  # Graceful failure
+        run: python scripts/excel-to-json.py
+```
+
+### JSON Formatting
+
+- **Indentation**: 2 spaces
+- **Encoding**: UTF-8 (no BOM)
+- **Ensure ASCII**: False (preserve Unicode characters)
+
+**Example**:
+
+```python
+with open('data/tools.json', 'w', encoding='utf-8') as f:
+    json.dump(tools, f, indent=2, ensure_ascii=False)
+```
+
+## Recent Changes
+
+### Feature 001: Excel to JSON Conversion (2025-10-30)
+
+**Added**:
+
+- GitHub Actions workflow for automated Excel parsing
+- Python script using openpyxl for Excel table extraction
+- Static JSON generation (flat array structure)
+- JSON Schema for validation
+- Graceful failure handling (preserves existing JSON)
+
+**Technology Stack**:
+
+- Python 3.11+ with openpyxl
+- GitHub Actions (ubuntu-latest)
+- JSON Schema Draft 07
+
+**Files**:
+
+- `.github/workflows/excel-to-json.yml` [Planned]
+- `scripts/excel-to-json.py` [Planned]
+- `data/tools.json` [Output]
+- `specs/001-excel-json-api/` [Documentation]
+
+## Constitution Compliance
+
+All features must adhere to principles in `.github/.specify/memory/constitution.md`:
+
+1. **Content-First**: Excel is source of truth; JSON generation is secondary
+2. **Static-First**: Static JSON generation only (no dynamic API)
+3. **Automated Deployment**: GitHub Actions required (NON-NEGOTIABLE)
+4. **Accessibility/Performance**: JSON <100KB, loads <2s, UTF-8 encoded
+5. **SEO**: Not applicable to data files
+
+## Development Workflow
+
+1. **Edit Excel**: Modify `/data/QA.xlsx` (worksheet "Tools", table "Tools")
+2. **Test Locally**: Run `python scripts/excel-to-json.py`
+3. **Validate**: Run `python -m json.tool data/tools.json`
+4. **Commit**: Add both Excel and JSON to Git
+5. **Push**: Trigger GitHub Actions workflow
+6. **Verify**: Check Actions logs and GitHub Pages deployment
+
+## Performance Targets
+
+- **Workflow Execution**: <30 seconds
+- **JSON Generation**: <5 seconds
+- **JSON File Size**: <100KB (expected <10KB for <1,000 rows)
+- **JSON Load Time**: <2 seconds on client
+
+## Error Handling
+
+- **Workflow Failure**: Use `continue-on-error: true` to preserve existing JSON
+- **Invalid Excel**: Log error, exit gracefully, don't commit broken JSON
+- **Missing Fields**: Represent as `null` in JSON
+- **Formula Errors**: Extract `#ERROR` value or `null`
+
+## References
+
+- **Constitution**: `.github/.specify/memory/constitution.md`
+- **Feature Spec**: `specs/001-excel-json-api/spec.md`
+- **Implementation Plan**: `specs/001-excel-json-api/plan.md`
+- **Research**: `specs/001-excel-json-api/research.md`
+- **Data Model**: `specs/001-excel-json-api/data-model.md`
+- **Quickstart**: `specs/001-excel-json-api/quickstart.md`
+
+<!-- MANUAL ADDITIONS START -->
+<!-- Add project-specific guidelines, team conventions, or tool-specific notes here -->
+<!-- MANUAL ADDITIONS END -->

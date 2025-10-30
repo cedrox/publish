@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cedrox.com/schemas/tools.json",
+  "title": "Tools Array",
+  "description": "Array of tool records extracted from QA.xlsx Excel file",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/Tool"
+  },
+  "definitions": {
+    "Tool": {
+      "type": "object",
+      "title": "Tool",
+      "description": "A single tool or resource documented in the QA tools database",
+      "additionalProperties": true,
+      "properties": {},
+      "patternProperties": {
+        ".*": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" },
+            { "type": "null" }
+          ],
+          "description": "Field value from Excel table. Type depends on Excel cell type."
+        }
+      }
+    }
+  },
+  "examples": [
+    [
+      {
+        "Tool Name": "GitHub Copilot",
+        "Category": "AI-Powered Development",
+        "Description": "AI pair programmer for code completion and generation",
+        "License Type": "Commercial",
+        "Documentation URL": "https://docs.github.com/copilot",
+        "Last Updated": "2024-01-15T00:00:00",
+        "Supported Languages": "Python, JavaScript, TypeScript, Java, Go, etc.",
+        "Integration": "VS Code, Visual Studio, JetBrains IDEs",
+        "Cost": 10,
+        "Active": true
+      },
+      {
+        "Tool Name": "SonarQube",
+        "Category": "Code Quality Analysis",
+        "Description": "Continuous inspection of code quality and security",
+        "License Type": "Open Source / Commercial",
+        "Documentation URL": "https://docs.sonarqube.org/",
+        "Last Updated": "2024-01-20T00:00:00",
+        "Supported Languages": "Java, C#, JavaScript, Python, PHP, etc.",
+        "Integration": "CI/CD pipelines, IDE plugins",
+        "Cost": null,
+        "Active": true
+      }
+    ]
+  ],
+  "minItems": 0,
+  "uniqueItems": false
+}
