@@ -160,13 +160,13 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T019 [US2] Add category filter dropdown to qa-tools.html: <select id="category-filter"> with "All categories" default option
-- [ ] T020 [P] [US2] Implement extractFilterOptions(tools: Tool[]) function in assets/js/src/filter-logic.ts: extract unique categories and types, return FilterOptions
-- [ ] T021 [P] [US2] Implement filterTools(tools: Tool[], state: FilterState) function in assets/js/src/filter-logic.ts: use Array.filter with AND logic for category match
-- [ ] T022 [US2] Create assets/js/src/filter-controls.ts: define global filterState object, implement populateFilterDropdowns(options: FilterOptions) to populate category dropdown
-- [ ] T023 [US2] Add category filter event listener in filter-controls.ts: attach change listener to category dropdown, update filterState.selectedCategory, trigger filter
-- [ ] T024 [US2] Update main.ts to call extractFilterOptions() after loading tools, call populateFilterDropdowns(), initialize filter controls
-- [ ] T025 [US2] Test category filtering: select each category, verify correct tools shown, verify "All categories" shows all 58 tools, verify <100ms response
+- [x] T019 [US2] Add category filter dropdown to qa-tools.html: <select id="category-filter"> with "All categories" default option
+- [x] T020 [P] [US2] Implement extractFilterOptions(tools: Tool[]) function in assets/js/src/filter-logic.ts: extract unique categories and types, return FilterOptions
+- [x] T021 [P] [US2] Implement filterTools(tools: Tool[], state: FilterState) function in assets/js/src/filter-logic.ts: use Array.filter with AND logic for category match
+- [x] T022 [US2] Create assets/js/src/filter-controls.ts: define global filterState object, implement populateFilterDropdowns(options: FilterOptions) to populate category dropdown
+- [x] T023 [US2] Add category filter event listener in filter-controls.ts: attach change listener to category dropdown, update filterState.selectedCategory, trigger filter
+- [x] T024 [US2] Update main.ts to call extractFilterOptions() after loading tools, call populateFilterDropdowns(), initialize filter controls
+- [x] T025 [US2] Test category filtering: select each category, verify correct tools shown, verify "All categories" shows all 58 tools, verify <100ms response
 
 **Parallel Execution**: T020 and T021 (filter-logic.ts) can be done in parallel (different functions).
 

@@ -6,6 +6,7 @@
 import type { Tool } from './types.js';
 import { loadTools } from './data-loader.js';
 import { showLoading, hideLoading, renderTools, showError } from './ui-renderer.js';
+import { initializeFilters } from './filter-controls.js';
 
 // Store loaded tools globally for filtering
 let allTools: Tool[] = [];
@@ -22,6 +23,9 @@ async function initializeApp(): Promise<void> {
     
     // Load tools from JSON
     allTools = await loadTools();
+    
+    // Initialize filter controls
+    initializeFilters(allTools);
     
     // Render all tools initially
     renderTools(allTools);
