@@ -13,6 +13,7 @@ Date: 2025-10-30
 import json
 import sys
 import logging
+import time
 from pathlib import Path
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -43,6 +44,7 @@ def parse_arguments() -> tuple[Path, Path]:
         tuple: (excel_path, json_path)
     """
     # Default paths relative to repository root
+    # These paths match the structure defined in spec.md
     excel_path = Path("data/QA.xlsx")
     json_path = Path("data/tools.json")
     
@@ -74,6 +76,7 @@ def load_excel_file(excel_path: Path) -> Any:
     try:
         logger.info(f"Loading Excel file: {excel_path}")
         # data_only=True extracts calculated values from formulas
+        # This ensures we get the computed result, not the formula itself
         workbook = load_workbook(excel_path, data_only=True)
         logger.info("✓ Excel file loaded successfully")
         return workbook
@@ -144,10 +147,11 @@ def parse_table_headers(worksheet: Worksheet, table: Table) -> List[str]:
     Returns:
         List of header names (preserved with spaces and special characters)
     """
-    # Get table range
+    # Get table range - this returns a 2D array of cells
     table_range = worksheet[table.ref]
     
-    # First row contains headers
+    # First row contains headers - preserve exact column names
+    # Column names like "Tools", "Description", "Familly" will be JSON keys
     header_row = table_range[0]
     headers = [cell.value for cell in header_row]
     
@@ -165,18 +169,21 @@ def convert_cell_value(value: Any) -> Any:
     Returns:
         JSON-compatible value (string, number, boolean, null)
     """
+    # Handle empty cells - convert to JSON null
     if value is None:
         return None
     
-    # Convert datetime to ISO 8601 string
+    # Convert datetime to ISO 8601 string (e.g., "2024-03-15T10:30:00")
+    # This ensures dates are consistently formatted in JSON
     if isinstance(value, datetime):
         return value.isoformat()
     
-    # Preserve strings, numbers, and booleans as-is
+    # Preserve primitive types as-is (strings, numbers, booleans)
+    # These are directly JSON-compatible
     if isinstance(value, (str, int, float, bool)):
         return value
     
-    # Fallback: convert to string
+    # Fallback: convert unknown types to string
     return str(value)
 
 
@@ -191,25 +198,30 @@ def extract_table_data(worksheet: Worksheet, table: Table) -> List[Dict[str, Any
     Returns:
         List of dictionaries with headers as keys and cell values
     """
-    # Get table range
+    # Get table range - includes header row and all data rows
     table_range = worksheet[table.ref]
     
-    # Parse headers from first row
+    # Parse headers from first row - these become JSON object keys
     headers = parse_table_headers(worksheet, table)
     
-    # Process data rows (skip header row)
+    # Process data rows (skip header row at index 0)
     data_rows = []
     row_count = 0
     
     for row in table_range[1:]:  # Skip header row
-        # Create dictionary for this row
+        # Create dictionary for this row - maps header → cell value
         row_dict = {}
         for header, cell in zip(headers, row):
-            # Convert cell value to appropriate JSON type
+            # Convert cell value to appropriate JSON type (handles dates, nulls, etc.)
             row_dict[header] = convert_cell_value(cell.value)
         
         data_rows.append(row_dict)
         row_count += 1
+    
+    # Handle edge case: empty table (only headers, no data rows)
+    if row_count == 0:
+        logger.warning("⚠️  Table is empty (no data rows found)")
+        logger.info("Generating empty JSON array []")
     
     logger.info(f"Extracted {row_count} data rows from table")
     return data_rows
@@ -227,10 +239,11 @@ def write_json_file(data: List[Dict[str, Any]], json_path: Path) -> None:
         IOError: If file cannot be written
     """
     try:
-        # Ensure parent directory exists
+        # Ensure parent directory exists (creates data/ if needed)
         json_path.parent.mkdir(parents=True, exist_ok=True)
         
         # Write JSON with UTF-8 encoding, 2-space indent, preserve Unicode
+        # ensure_ascii=False allows non-ASCII characters (é, ñ, etc.)
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
         
@@ -242,44 +255,59 @@ def write_json_file(data: List[Dict[str, Any]], json_path: Path) -> None:
 
 
 def main():
-    """Main execution function."""
+    """Main execution function - orchestrates the conversion pipeline."""
+    # Record start time for performance metrics
+    start_time = time.time()
+    
     logger.info("Starting Excel to JSON conversion")
     
     try:
-        # Parse arguments
+        # Step 1: Parse command-line arguments (or use defaults)
         excel_path, json_path = parse_arguments()
         logger.info(f"Excel source: {excel_path}")
         logger.info(f"JSON output: {json_path}")
         
-        # Load Excel file
+        # Step 2: Load Excel workbook
         workbook = load_excel_file(excel_path)
         
-        # Validate worksheet exists
+        # Step 3: Validate worksheet exists
         worksheet = validate_worksheet(workbook, "Tools")
         
-        # Extract table
+        # Step 4: Extract named table from worksheet
         table = extract_table(worksheet, "Tools")
         
-        # Extract data from table
+        # Step 5: Extract and convert table data to list of dicts
         data = extract_table_data(worksheet, table)
         
-        # Write JSON output
+        # Step 6: Write JSON output file
         write_json_file(data, json_path)
         
+        # Calculate and log performance metrics
+        end_time = time.time()
+        execution_time = end_time - start_time
+        
         logger.info("✓ Conversion completed successfully")
+        logger.info(f"Performance metrics:")
+        logger.info(f"  - Rows processed: {len(data)}")
+        logger.info(f"  - Execution time: {execution_time:.2f} seconds")
+        logger.info(f"  - Throughput: {len(data)/execution_time:.2f} rows/second")
+        
         return 0
         
     except FileNotFoundError as e:
+        # Excel file doesn't exist at expected path
         logger.error(f"❌ File not found error: {e}")
         logger.error("   Please ensure data/QA.xlsx exists in the repository")
         return 1
     except KeyError as e:
+        # Missing worksheet or table in Excel file
         logger.error(f"❌ Missing required element: {e}")
         logger.error("   Please check that the Excel file has:")
         logger.error("   - A worksheet named 'Tools'")
         logger.error("   - A table named 'Tools' in that worksheet")
         return 1
     except Exception as e:
+        # Unexpected errors (corrupted file, permission issues, etc.)
         logger.error(f"❌ Unexpected error: {type(e).__name__}: {e}")
         logger.error("   This may indicate a corrupted Excel file or system issue")
         return 1

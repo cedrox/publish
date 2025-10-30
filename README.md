@@ -3,6 +3,19 @@ Website about Elevating Software Quality with AI and Modern Tools
 
 [![Excel to JSON](https://github.com/cedrox/publish/actions/workflows/excel-to-json.yml/badge.svg)](https://github.com/cedrox/publish/actions/workflows/excel-to-json.yml)
 
+## ✨ Features
+
+### Excel to JSON Automation
+
+Automatically converts tool data from Excel to JSON for website consumption.
+
+- **Source**: `/data/QA.xlsx` (worksheet "Tools", table "Tools")
+- **Output**: `/data/tools.json` (flat array of tool objects)
+- **Trigger**: GitHub Actions workflow on Excel file changes
+- **Error Handling**: Preserves existing JSON if conversion fails
+
+📖 **[View Documentation](specs/001-excel-json-api/quickstart.md)** - Setup guide, testing instructions, and API reference
+
 ## 🚀 Deployment
 
 This Jekyll site is automatically built and deployed using GitHub Actions.

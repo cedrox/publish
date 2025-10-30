@@ -14,6 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Record start time
+        id: start
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+      
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -39,6 +43,20 @@ jobs:
         run: |
           python -m json.tool data/tools.json > /dev/null
       
+      - name: Check JSON file size
+        if: steps.generate.outcome == 'success'
+        run: |
+          FILE_SIZE=$(stat -c%s data/tools.json)
+          echo "JSON file size: $FILE_SIZE bytes"
+          
+          # Warn if file is larger than 1MB (1048576 bytes)
+          if [ $FILE_SIZE -gt 1048576 ]; then
+            echo "⚠️  WARNING: JSON file exceeds 1MB ($FILE_SIZE bytes)"
+            echo "Consider splitting data or optimizing structure"
+          else
+            echo "✓ File size OK: $(( FILE_SIZE / 1024 )) KB"
+          fi
+      
       - name: Configure Git
         if: steps.generate.outcome == 'success'
         run: |
@@ -56,3 +74,18 @@ jobs:
         if: steps.generate.outcome == 'success' && steps.commit.outcome == 'success'
         run: |
           git push
+      
+      - name: Report execution time
+        if: always()
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "Workflow execution time: ${DURATION} seconds"
+          
+          # Verify <30s requirement (SC-002)
+          if [ $DURATION -gt 30 ]; then
+            echo "⚠️  WARNING: Execution time exceeds 30 seconds"
+            echo "Consider optimizing the conversion script"
+          else
+            echo "✓ Execution time OK: ${DURATION}s (requirement: <30s)"
+          fi
