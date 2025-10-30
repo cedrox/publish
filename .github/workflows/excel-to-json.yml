@@ -1,0 +1,58 @@
+name: Excel to JSON Conversion
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/QA.xlsx'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  convert:
+    name: Convert Excel to JSON
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install openpyxl
+      
+      - name: Generate JSON from Excel
+        id: generate
+        continue-on-error: true
+        run: |
+          python scripts/excel-to-json.py
+      
+      - name: Validate JSON
+        if: steps.generate.outcome == 'success'
+        run: |
+          python -m json.tool data/tools.json > /dev/null
+      
+      - name: Configure Git
+        if: steps.generate.outcome == 'success'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Commit JSON changes
+        id: commit
+        if: steps.generate.outcome == 'success'
+        run: |
+          git add data/tools.json
+          git diff --staged --quiet || git commit -m "chore: auto-update tools.json from Excel [skip ci]"
+      
+      - name: Push changes
+        if: steps.generate.outcome == 'success' && steps.commit.outcome == 'success'
+        run: |
+          git push

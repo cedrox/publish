@@ -302,17 +302,151 @@ Expected:
 - Content-Type: `application/json` or `text/plain`
 - Access-Control-Allow-Origin: `*` (GitHub Pages allows CORS)
 
+### GitHub Pages Cache Headers
+
+GitHub Pages automatically sets cache headers for static files:
+
+- **Cache-Control**: `max-age=600` (10 minutes for HTML), `max-age=3600` (1 hour for other files)
+- **ETag**: Automatically generated based on file content
+- **Last-Modified**: Based on file modification time
+
+**Cache Behavior**:
+
+- Browser caches JSON for up to 1 hour
+- When JSON is updated (new commit), ETag changes
+- Browser revalidates and fetches new version
+- Use hard refresh (`Ctrl+Shift+R`) to force immediate update
+
+**Testing Cache Invalidation**:
+
+```javascript
+// Check ETag header
+fetch('https://your-site.github.io/publish/data/tools.json')
+  .then(response => {
+    console.log('ETag:', response.headers.get('ETag'));
+    console.log('Last-Modified:', response.headers.get('Last-Modified'));
+    console.log('Cache-Control:', response.headers.get('Cache-Control'));
+  });
+```
+
+### Client-Side Usage Example
+
+Complete example for fetching and displaying tools data:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tools Browser</title>
+</head>
+<body>
+  <h1>Quality Assurance Tools</h1>
+  <div id="tools-list"></div>
+  
+  <script>
+    // Fetch tools data
+    fetch('/data/tools.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(tools => {
+        console.log(`Loaded ${tools.length} tools`);
+        
+        // Display tools
+        const container = document.getElementById('tools-list');
+        tools.forEach(tool => {
+          const div = document.createElement('div');
+          div.className = 'tool';
+          div.innerHTML = `
+            <h3>${tool.Tools || 'Unknown'}</h3>
+            <p>${tool.Description || 'No description'}</p>
+            <p><strong>Category:</strong> ${tool.Familly || 'N/A'}</p>
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(error => {
+        console.error('Error loading tools:', error);
+        document.getElementById('tools-list').innerHTML = 
+          '<p>Error loading tools data. Please try again later.</p>';
+      });
+  </script>
+</body>
+</html>
+```
+
+**Note**: Column names with spaces (like `"Tools"`, `"Familly"`) require bracket notation: `tool["Tools"]`
+
 ## Troubleshooting
 
 ### Workflow Fails but JSON Exists
 
 **Expected behavior** - The workflow uses `continue-on-error: true` to allow graceful failure. If the Python script fails, the existing `/data/tools.json` is preserved and the site remains functional.
 
+**How it works**:
+
+1. **Graceful Failure**: The workflow step `continue-on-error: true` allows the Python script to fail without stopping the entire workflow
+2. **JSON Preservation**: If conversion fails, `git add data/tools.json` only stages changes if a new file was generated
+3. **No Commit on Failure**: The conditional `if: steps.generate.outcome == 'success'` prevents committing broken JSON
+4. **Site Stability**: Existing JSON remains in repository, so the website continues to serve the last known good data
+
 **Check**:
 
-1. Review workflow logs for error message
-2. Fix the issue (e.g., malformed Excel file)
+1. Review workflow logs for error message (look for ❌ symbols)
+2. Fix the issue (e.g., malformed Excel file, missing worksheet/table)
 3. Push fix and re-run workflow
+
+### Common Failure Scenarios
+
+#### Missing Worksheet or Table
+
+**Symptom**: Workflow fails with "❌ Worksheet 'Tools' not found" or "❌ Table 'Tools' not found"
+
+**Cause**: Excel file doesn't have the required worksheet or table name
+
+**Solution**:
+
+1. Open `/data/QA.xlsx` in Excel
+2. Ensure worksheet named "Tools" exists
+3. Ensure a table named "Tools" exists in that worksheet (Insert → Table → Name: "Tools")
+4. Save, commit, and push
+
+#### Corrupted Excel File
+
+**Symptom**: Workflow fails with "❌ Failed to load Excel file" or "❌ Error opening Excel file"
+
+**Cause**: Excel file is corrupted or not a valid `.xlsx` format
+
+**Solution**:
+
+1. Try opening the file in Excel to confirm corruption
+2. Restore from Git history (see "Excel File Corruption" section below)
+3. Or re-export the data from the source system
+4. Commit and push the fixed file
+
+#### File Not Found
+
+**Symptom**: Workflow fails with "❌ File not found: data/QA.xlsx"
+
+**Cause**: Excel file wasn't committed or is in the wrong location
+
+**Solution**:
+
+```bash
+# Check if file exists
+ls data/QA.xlsx
+
+# If missing, ensure it's in the correct location
+git status data/QA.xlsx
+
+# Commit if needed
+git add data/QA.xlsx
+git commit -m "Add missing QA.xlsx file"
+git push
+```
 
 ### JSON Not Updating After Excel Changes
 
@@ -333,18 +467,59 @@ git log --oneline data/tools.json   # Check if JSON was updated
 
 If the Excel file becomes corrupted or won't open:
 
-1. Restore from Git history:
+#### Restore from Git History
+
+1. **View file history**:
 
    ```bash
-   git checkout HEAD~1 data/QA.xlsx
+   git log --oneline data/QA.xlsx     # Find commits that modified the file
    ```
 
-2. Or restore from a specific commit:
+2. **Restore from previous commit**:
 
    ```bash
-   git log --oneline data/QA.xlsx     # Find good commit
+   git checkout HEAD~1 data/QA.xlsx   # Restore from 1 commit ago
+   # Or specify exact commit:
    git checkout <commit-hash> data/QA.xlsx
    ```
+
+3. **Verify the restored file**:
+
+   ```bash
+   python scripts/excel-to-json.py    # Test conversion
+   python -m json.tool data/tools.json  # Validate JSON
+   ```
+
+4. **Commit the restoration**:
+
+   ```bash
+   git add data/QA.xlsx
+   git commit -m "fix: restore QA.xlsx from <commit-hash>"
+   git push origin 001-excel-json-api
+   ```
+
+#### Check Workflow Logs
+
+When errors occur, the workflow logs provide detailed diagnostics:
+
+1. Go to **Actions** tab in GitHub repository
+2. Click on the failed **Excel to JSON** workflow run
+3. Expand the **Generate JSON from Excel** step
+4. Look for error messages with ❌ symbols:
+   - **File not found**: Check if `data/QA.xlsx` was committed
+   - **Missing worksheet**: Excel needs a worksheet named "Tools"
+   - **Missing table**: Worksheet needs a table named "Tools"
+   - **Corrupted file**: File may not be valid `.xlsx` format
+
+#### Recovery Checklist
+
+- [ ] Check workflow logs for specific error message
+- [ ] If corrupted, restore from Git history using steps above
+- [ ] If missing worksheet/table, verify Excel structure
+- [ ] Test locally with `python scripts/excel-to-json.py`
+- [ ] Validate JSON with `python -m json.tool data/tools.json`
+- [ ] Commit fix and push to trigger new workflow run
+- [ ] Verify workflow completes successfully in GitHub Actions
 
 ## Development Workflow Summary
 

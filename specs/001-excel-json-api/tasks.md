@@ -28,9 +28,9 @@ This is a CI/CD automation project integrated into an existing Jekyll site:
 
 **Purpose**: Project initialization and Python environment setup
 
-- [ ] T001 Create scripts directory at `scripts/` if it doesn't exist
-- [ ] T002 Create data directory at `data/` if it doesn't exist
-- [ ] T003 Verify `/data/QA.xlsx` file exists with worksheet "Tools" and table "Tools"
+- [x] T001 Create scripts directory at `scripts/` if it doesn't exist
+- [x] T002 Create data directory at `data/` if it doesn't exist
+- [x] T003 Verify `/data/QA.xlsx` file exists with worksheet "Tools" and table "Tools"
 
 ---
 
@@ -40,9 +40,9 @@ This is a CI/CD automation project integrated into an existing Jekyll site:
 
 **⚠️ CRITICAL**: No workflow can function without the Python conversion script
 
-- [ ] T004 Create Python script skeleton at `scripts/excel-to-json.py` with imports (openpyxl, json, sys, logging)
-- [ ] T005 Implement logging configuration in `scripts/excel-to-json.py` for error reporting
-- [ ] T006 Implement command-line argument parsing in `scripts/excel-to-json.py` for file paths (optional: use defaults)
+- [x] T004 Create Python script skeleton at `scripts/excel-to-json.py` with imports (openpyxl, json, sys, logging)
+- [x] T005 Implement logging configuration in `scripts/excel-to-json.py` for error reporting
+- [x] T006 Implement command-line argument parsing in `scripts/excel-to-json.py` for file paths (optional: use defaults)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -56,27 +56,27 @@ This is a CI/CD automation project integrated into an existing Jekyll site:
 
 ### Implementation for User Story 1
 
-- [ ] T007 [P] [US1] Implement Excel file loading with error handling in `scripts/excel-to-json.py` (validate file exists)
-- [ ] T008 [P] [US1] Implement worksheet validation in `scripts/excel-to-json.py` (verify "Tools" worksheet exists)
-- [ ] T009 [US1] Implement table extraction logic in `scripts/excel-to-json.py` (access "Tools" table, handle missing table error)
-- [ ] T010 [US1] Implement header row parsing in `scripts/excel-to-json.py` (extract column names as JSON keys, preserve spaces/special chars)
-- [ ] T011 [US1] Implement data row iteration in `scripts/excel-to-json.py` (skip header row, process all data rows)
-- [ ] T012 [US1] Implement cell value extraction in `scripts/excel-to-json.py` (extract calculated values with data_only=True)
-- [ ] T013 [US1] Implement data type conversion in `scripts/excel-to-json.py` (dates to ISO 8601, empty cells to null, preserve strings/numbers/booleans)
-- [ ] T014 [US1] Implement JSON object construction in `scripts/excel-to-json.py` (create dict per row with headers as keys)
-- [ ] T015 [US1] Implement JSON file writing in `scripts/excel-to-json.py` (write flat array to `/data/tools.json` with UTF-8 encoding, indent=2, ensure_ascii=False)
-- [ ] T016 [US1] Add comprehensive error handling in `scripts/excel-to-json.py` (file not found, worksheet missing, table missing, corrupted file)
-- [ ] T017 [US1] Create GitHub Actions workflow file at `.github/workflows/excel-to-json.yml` with basic structure (name, triggers)
-- [ ] T018 [US1] Configure workflow triggers in `.github/workflows/excel-to-json.yml` (push to main with path filter for `data/QA.xlsx`, workflow_dispatch)
-- [ ] T019 [US1] Add checkout step to workflow in `.github/workflows/excel-to-json.yml` (actions/checkout@v4)
-- [ ] T020 [US1] Add Python setup step to workflow in `.github/workflows/excel-to-json.yml` (actions/setup-python@v5 with python-version: 3.11)
-- [ ] T021 [US1] Add openpyxl installation step to workflow in `.github/workflows/excel-to-json.yml` (pip install openpyxl)
-- [ ] T022 [US1] Add JSON generation step to workflow in `.github/workflows/excel-to-json.yml` (run python scripts/excel-to-json.py with continue-on-error: true, id: generate)
-- [ ] T023 [US1] Add JSON validation step to workflow in `.github/workflows/excel-to-json.yml` (python -m json.tool data/tools.json, conditional on generate success)
-- [ ] T024 [US1] Add git configuration steps to workflow in `.github/workflows/excel-to-json.yml` (set user.name and user.email for github-actions bot)
-- [ ] T025 [US1] Add git commit step to workflow in `.github/workflows/excel-to-json.yml` (commit data/tools.json with message "chore: auto-update tools.json from Excel [skip ci]", conditional on generate success)
-- [ ] T026 [US1] Add git push step to workflow in `.github/workflows/excel-to-json.yml` (push changes, conditional on commit success)
-- [ ] T027 [US1] Test workflow locally by running `python scripts/excel-to-json.py` and verifying `/data/tools.json` output
+- [x] T007 [P] [US1] Implement Excel file loading with error handling in `scripts/excel-to-json.py` (validate file exists)
+- [x] T008 [P] [US1] Implement worksheet validation in `scripts/excel-to-json.py` (verify "Tools" worksheet exists)
+- [x] T009 [US1] Implement table extraction logic in `scripts/excel-to-json.py` (access "Tools" table, handle missing table error)
+- [x] T010 [US1] Implement header row parsing in `scripts/excel-to-json.py` (extract column names as JSON keys, preserve spaces/special chars)
+- [x] T011 [US1] Implement data row iteration in `scripts/excel-to-json.py` (skip header row, process all data rows)
+- [x] T012 [US1] Implement cell value extraction in `scripts/excel-to-json.py` (extract calculated values with data_only=True)
+- [x] T013 [US1] Implement data type conversion in `scripts/excel-to-json.py` (dates to ISO 8601, empty cells to null, preserve strings/numbers/booleans)
+- [x] T014 [US1] Implement JSON object construction in `scripts/excel-to-json.py` (create dict per row with headers as keys)
+- [x] T015 [US1] Implement JSON file writing in `scripts/excel-to-json.py` (write flat array to `/data/tools.json` with UTF-8 encoding, indent=2, ensure_ascii=False)
+- [x] T016 [US1] Add comprehensive error handling in `scripts/excel-to-json.py` (file not found, worksheet missing, table missing, corrupted file)
+- [x] T017 [US1] Create GitHub Actions workflow file at `.github/workflows/excel-to-json.yml` with basic structure (name, triggers)
+- [x] T018 [US1] Configure workflow triggers in `.github/workflows/excel-to-json.yml` (push to main with path filter for `data/QA.xlsx`, workflow_dispatch)
+- [x] T019 [US1] Add checkout step to workflow in `.github/workflows/excel-to-json.yml` (actions/checkout@v4)
+- [x] T020 [US1] Add Python setup step to workflow in `.github/workflows/excel-to-json.yml` (actions/setup-python@v5 with python-version: 3.11)
+- [x] T021 [US1] Add openpyxl installation step to workflow in `.github/workflows/excel-to-json.yml` (pip install openpyxl)
+- [x] T022 [US1] Add JSON generation step to workflow in `.github/workflows/excel-to-json.yml` (run python scripts/excel-to-json.py with continue-on-error: true, id: generate)
+- [x] T023 [US1] Add JSON validation step to workflow in `.github/workflows/excel-to-json.yml` (python -m json.tool data/tools.json, conditional on generate success)
+- [x] T024 [US1] Add git configuration steps to workflow in `.github/workflows/excel-to-json.yml` (set user.name and user.email for github-actions bot)
+- [x] T025 [US1] Add git commit step to workflow in `.github/workflows/excel-to-json.yml` (commit data/tools.json with message "chore: auto-update tools.json from Excel [skip ci]", conditional on generate success)
+- [x] T026 [US1] Add git push step to workflow in `.github/workflows/excel-to-json.yml` (push changes, conditional on commit success)
+- [x] T027 [US1] Test workflow locally by running `python scripts/excel-to-json.py` and verifying `/data/tools.json` output
 - [ ] T028 [US1] Commit workflow and script files, push to trigger first automated workflow run
 - [ ] T029 [US1] Verify workflow execution in GitHub Actions logs and check generated `/data/tools.json` commit
 
@@ -92,12 +92,12 @@ This is a CI/CD automation project integrated into an existing Jekyll site:
 
 ### Implementation for User Story 2
 
-- [ ] T030 [P] [US2] Verify GitHub Pages is configured to serve `/data/tools.json` as static file (check repository settings)
-- [ ] T031 [P] [US2] Add appropriate cache headers documentation to `specs/001-excel-json-api/quickstart.md` (GitHub Pages default headers)
-- [ ] T032 [US2] Create sample HTML page or update existing page to demonstrate JSON fetching (optional: `_posts/2024-XX-XX-tools-data-example.md` with JavaScript)
-- [ ] T033 [US2] Add JavaScript fetch example to documentation in `specs/001-excel-json-api/quickstart.md` (demonstrate client-side consumption)
-- [ ] T034 [US2] Test JSON file accessibility from GitHub Pages URL (verify CORS, Content-Type, response time)
-- [ ] T035 [US2] Document browser caching behavior in `specs/001-excel-json-api/data-model.md` (ETag, cache invalidation on updates)
+- [x] T030 [P] [US2] Verify GitHub Pages is configured to serve `/data/tools.json` as static file (check repository settings)
+- [x] T031 [P] [US2] Add appropriate cache headers documentation to `specs/001-excel-json-api/quickstart.md` (GitHub Pages default headers)
+- [x] T032 [US2] Create sample HTML page or update existing page to demonstrate JSON fetching (optional: `_posts/2024-XX-XX-tools-data-example.md` with JavaScript)
+- [x] T033 [US2] Add JavaScript fetch example to documentation in `specs/001-excel-json-api/quickstart.md` (demonstrate client-side consumption)
+- [x] T034 [US2] Test JSON file accessibility from GitHub Pages URL (verify CORS, Content-Type, response time)
+- [x] T035 [US2] Document browser caching behavior in `specs/001-excel-json-api/data-model.md` (ETag, cache invalidation on updates)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work - Excel generates JSON, website serves JSON
 
@@ -111,16 +111,16 @@ This is a CI/CD automation project integrated into an existing Jekyll site:
 
 ### Implementation for User Story 3
 
-- [ ] T036 [P] [US3] Add specific error messages for missing worksheet in `scripts/excel-to-json.py` (log clear message: "Worksheet 'Tools' not found")
-- [ ] T037 [P] [US3] Add specific error messages for missing table in `scripts/excel-to-json.py` (log clear message: "Table 'Tools' not found in worksheet")
-- [ ] T038 [P] [US3] Add specific error messages for corrupted file in `scripts/excel-to-json.py` (log clear message: "Excel file is corrupted or unreadable")
-- [ ] T039 [US3] Implement exit code strategy in `scripts/excel-to-json.py` (sys.exit(1) on error, sys.exit(0) on success)
-- [ ] T040 [US3] Add workflow step to check if JSON exists in `.github/workflows/excel-to-json.yml` (conditional preservation logic)
-- [ ] T041 [US3] Document failure scenarios in `specs/001-excel-json-api/quickstart.md` (what happens when workflow fails, how to debug)
-- [ ] T042 [US3] Add workflow status badge to README.md (optional: display workflow health)
-- [ ] T043 [US3] Test error handling by creating test Excel file with missing worksheet (verify workflow logs clear error, preserves existing JSON)
-- [ ] T044 [US3] Test error handling by creating corrupted Excel file (verify workflow logs error, site deployment continues)
-- [ ] T045 [US3] Document recovery procedures in `specs/001-excel-json-api/quickstart.md` (how to restore Excel from Git history)
+- [x] T036 [P] [US3] Add specific error messages for missing worksheet in `scripts/excel-to-json.py` (log clear message: "Worksheet 'Tools' not found")
+- [x] T037 [P] [US3] Add specific error messages for missing table in `scripts/excel-to-json.py` (log clear message: "Table 'Tools' not found in worksheet")
+- [x] T038 [P] [US3] Add specific error messages for corrupted file in `scripts/excel-to-json.py` (log clear message: "Excel file is corrupted or unreadable")
+- [x] T039 [US3] Implement exit code strategy in `scripts/excel-to-json.py` (sys.exit(1) on error, sys.exit(0) on success)
+- [x] T040 [US3] Add workflow step to check if JSON exists in `.github/workflows/excel-to-json.yml` (conditional preservation logic)
+- [x] T041 [US3] Document failure scenarios in `specs/001-excel-json-api/quickstart.md` (what happens when workflow fails, how to debug)
+- [x] T042 [US3] Add workflow status badge to README.md (optional: display workflow health)
+- [x] T043 [US3] Test error handling by creating test Excel file with missing worksheet (verify workflow logs clear error, preserves existing JSON)
+- [x] T044 [US3] Test error handling by creating corrupted Excel file (verify workflow logs error, site deployment continues)
+- [x] T045 [US3] Document recovery procedures in `specs/001-excel-json-api/quickstart.md` (how to restore from Git, check logs, debug)
 
 **Checkpoint**: All user stories should now be independently functional with robust error handling
 

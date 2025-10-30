@@ -226,6 +226,41 @@ If the dataset grows significantly (>10,000 rows), consider:
 - Server-side filtering (requires backend API)
 - Compression (gzip via GitHub Pages)
 
+### Browser Caching Behavior
+
+**GitHub Pages Default Headers**:
+
+- **Cache-Control**: `max-age=3600` (1 hour)
+- **ETag**: Content-based hash for validation
+- **Last-Modified**: File timestamp from Git commit
+
+**Cache Invalidation**:
+
+- When Excel file is updated and JSON is regenerated, ETag changes
+- Browser revalidates on next request and fetches new version
+- Hard refresh (`Ctrl+Shift+R`) bypasses cache immediately
+- No manual cache-busting query parameters needed
+
+**Client-Side Caching Strategy**:
+
+```javascript
+// Browser automatically handles ETag validation
+fetch('/data/tools.json')
+  .then(response => response.json())
+  .then(tools => {
+    // Tools will be latest version if ETag changed
+    // Otherwise served from browser cache
+  });
+```
+
+**Testing Cache Behavior**:
+
+1. Load JSON in browser (cached for 1 hour)
+2. Update Excel file and push to trigger workflow
+3. Wait for workflow to commit new JSON (~1-2 minutes)
+4. Reload page - browser checks ETag, fetches new version if changed
+5. Hard refresh forces immediate fetch bypassing cache
+
 ## JSON Schema
 
 See `contracts/tools-schema.json` for formal JSON Schema definition.

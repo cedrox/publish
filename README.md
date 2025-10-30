@@ -1,6 +1,8 @@
 # publish
 Website about Elevating Software Quality with AI and Modern Tools
 
+[![Excel to JSON](https://github.com/cedrox/publish/actions/workflows/excel-to-json.yml/badge.svg)](https://github.com/cedrox/publish/actions/workflows/excel-to-json.yml)
+
 ## 🚀 Deployment
 
 This Jekyll site is automatically built and deployed using GitHub Actions.
@@ -35,6 +37,13 @@ bundle exec jekyll serve
 
 # Visit http://localhost:4000 in your browser
 ```
+
+To generate the json file locally:
+
+```python
+python scripts/excel-to-json.py data/QA.xlsx data/tools.json
+```
+
 
 ## 📝 Adding Content
 
