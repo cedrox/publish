@@ -8,6 +8,58 @@
 
 This data model documents the structure of Tool records extracted from `/data/QA.xlsx` (worksheet "Tools", table "Tools") and serialized to `/data/tools.json`. The schema is determined by the Excel table's column headers and data types.
 
+## Excel File Structure
+
+### Required Structure
+
+The Excel file **MUST** have the following structure:
+
+- **File Location**: `/data/QA.xlsx` (relative to repository root)
+- **Worksheet Name**: `Tools` (case-sensitive)
+- **Table Name**: `Tools` (named table, case-sensitive)
+- **Table Format**:
+  - Row 1: Column headers (become JSON keys)
+  - Row 2+: Data rows (become JSON objects)
+
+### Creating the Excel Table
+
+To create a properly formatted Excel file:
+
+1. **Open Excel** and create a new workbook
+2. **Add headers in row 1** with column names (e.g., "Tools", "Description", "Category")
+3. **Add data starting in row 2** with one tool per row
+4. **Select the entire data range** (including headers)
+5. **Insert → Table** (Excel 2016+) or **Format as Table**
+6. **Name the table** "Tools" in the Table Design ribbon
+7. **Rename the worksheet** to "Tools" (right-click sheet tab → Rename)
+8. **Save as** `/data/QA.xlsx`
+
+### Example Excel Structure
+
+```text
+Worksheet: "Tools"
+Table: "Tools"
+
+┌─────────────┬─────────────────────┬──────────┬────────┬─────────────┐
+│ Tools       │ Description         │ Familly  │ Type   │ Importance  │
+├─────────────┼─────────────────────┼──────────┼────────┼─────────────┤
+│ GitHub      │ Version control     │ DevOps   │ Core   │ 5           │
+│ Copilot     │                     │          │        │             │
+├─────────────┼─────────────────────┼──────────┼────────┼─────────────┤
+│ SonarQube   │ Code quality        │ Testing  │ Plugin │ 4           │
+│             │ analysis            │          │        │             │
+├─────────────┼─────────────────────┼──────────┼────────┼─────────────┤
+│ ...         │ ...                 │ ...      │ ...    │ ...         │
+└─────────────┴─────────────────────┴──────────┴────────┴─────────────┘
+```
+
+**Key Points**:
+
+- Headers in row 1 become JSON object keys
+- Empty cells convert to `null` in JSON
+- Column names can include spaces and special characters
+- The conversion script reads all rows in the table automatically
+
 ## Entity: Tool
 
 ### Description
@@ -125,6 +177,55 @@ Based on typical QA tool documentation, a Tool record might look like:
 **Behavior**: openpyxl extracts plain text value; formatting (bold, colors) is lost.
 
 **Decision**: Acceptable - JSON is for data, not presentation.
+
+#### 5. Special Characters and Encoding
+
+**Unicode Support**:
+
+- The conversion script uses UTF-8 encoding with `ensure_ascii=False`
+- All Unicode characters are preserved (e.g., é, ñ, 中文, emoji 🎉)
+- Example: `"Description": "Outil d'évaluation de qualité"` → Valid JSON
+
+**Newlines and Whitespace**:
+
+- Newlines in Excel cells (Alt+Enter) are preserved as `\n` in JSON strings
+- Example: `"Description": "Line 1\nLine 2"` → Valid JSON
+- Leading/trailing whitespace is preserved
+- Tab characters (`\t`) are preserved
+
+**Quotes and Escaping**:
+
+- Double quotes (`"`) in cell values are automatically escaped as `\"`
+- Example: Cell value `Say "Hello"` → JSON `"Say \"Hello\""`
+- Single quotes (`'`) do not require escaping in JSON
+- Backslashes (`\`) are escaped as `\\`
+
+**Special JSON Characters**:
+
+- Control characters (U+0000 to U+001F) are escaped (e.g., `\u0000`)
+- Forward slashes (`/`) do not require escaping in JSON (but are valid)
+
+**Excel Formula Characters**:
+
+- If cell contains formula (e.g., `=SUM(A1:A10)`), only calculated value is extracted
+- Formula operators (`=`, `+`, `*`) in text cells are preserved as-is
+
+**Example with Special Characters**:
+
+```json
+{
+  "Tool Name": "Outil d'évaluation",
+  "Description": "Line 1\nLine 2\nIncludes \"quotes\" and émojis 🎉",
+  "Notes": "File path: C:\\Users\\test\\file.txt",
+  "Formula Result": 150
+}
+```
+
+**Best Practices**:
+
+- Avoid control characters (invisible characters) in Excel cells
+- Test with non-ASCII characters to verify encoding
+- Use Excel's CLEAN() function to remove unprintable characters if needed
 
 ## JSON Output Structure
 

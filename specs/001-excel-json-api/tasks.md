@@ -130,16 +130,16 @@ This is a CI/CD automation project integrated into an existing Jekyll site:
 
 **Purpose**: Improvements that affect multiple user stories and enhance overall quality
 
-- [ ] T046 [P] Add comprehensive code comments to `scripts/excel-to-json.py` (explain each section's purpose)
-- [ ] T047 [P] Add docstrings to functions in `scripts/excel-to-json.py` (Google style docstrings with args, returns, raises)
-- [ ] T048 [P] Update README.md with feature overview and link to `specs/001-excel-json-api/quickstart.md`
-- [ ] T049 [P] Add example Excel file structure documentation to `specs/001-excel-json-api/data-model.md` (show expected table format)
-- [ ] T050 Add performance metrics logging to `scripts/excel-to-json.py` (log row count, execution time)
-- [ ] T051 Add JSON file size validation to workflow in `.github/workflows/excel-to-json.yml` (warn if >1MB)
-- [ ] T052 Add workflow execution time reporting in `.github/workflows/excel-to-json.yml` (verify <30s requirement)
-- [ ] T053 Run through complete quickstart.md validation (follow all setup steps, verify all examples work)
-- [ ] T054 Add edge case handling for empty table in `scripts/excel-to-json.py` (generate empty array [], not error)
-- [ ] T055 Document special character handling in `specs/001-excel-json-api/data-model.md` (Unicode, newlines, quotes)
+- [x] T046 [P] Add comprehensive code comments to `scripts/excel-to-json.py` (explain each section's purpose)
+- [x] T047 [P] Add docstrings to functions in `scripts/excel-to-json.py` (Google style docstrings with args, returns, raises)
+- [x] T048 [P] Update README.md with feature overview and link to `specs/001-excel-json-api/quickstart.md`
+- [x] T049 [P] Add example Excel file structure documentation to `specs/001-excel-json-api/data-model.md` (show expected table format)
+- [x] T050 Add performance metrics logging to `scripts/excel-to-json.py` (log row count, execution time)
+- [x] T051 Add JSON file size validation to workflow in `.github/workflows/excel-to-json.yml` (warn if >1MB)
+- [x] T052 Add workflow execution time reporting in `.github/workflows/excel-to-json.yml` (verify <30s requirement)
+- [x] T053 Run through complete quickstart.md validation (follow all setup steps, verify all examples work)
+- [x] T054 Add edge case handling for empty table in `scripts/excel-to-json.py` (generate empty array [], not error)
+- [x] T055 Document special character handling in `specs/001-excel-json-api/data-model.md` (Unicode, newlines, quotes)
 
 ---
 
