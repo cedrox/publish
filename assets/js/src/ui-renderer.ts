@@ -14,9 +14,16 @@ let toolsContainer: HTMLElement | null = null;
  */
 function initializeElements(): void {
   if (!loadingIndicator) {
+    console.log('[UI-RENDERER] Initializing DOM element references...');
     loadingIndicator = document.getElementById('loading-indicator');
     errorMessageContainer = document.getElementById('error-message');
     toolsContainer = document.getElementById('tools-container');
+    
+    console.log('[UI-RENDERER] DOM elements found:', {
+      loadingIndicator: !!loadingIndicator,
+      errorMessageContainer: !!errorMessageContainer,
+      toolsContainer: !!toolsContainer
+    });
   }
 }
 
@@ -24,9 +31,13 @@ function initializeElements(): void {
  * Show the loading indicator
  */
 export function showLoading(): void {
+  console.log('[UI-RENDERER] showLoading() called');
   initializeElements();
   if (loadingIndicator) {
     loadingIndicator.classList.remove('hidden');
+    console.log('[UI-RENDERER] Loading indicator shown');
+  } else {
+    console.error('[UI-RENDERER] ❌ Loading indicator element not found');
   }
 }
 
@@ -34,9 +45,13 @@ export function showLoading(): void {
  * Hide the loading indicator
  */
 export function hideLoading(): void {
+  console.log('[UI-RENDERER] hideLoading() called');
   initializeElements();
   if (loadingIndicator) {
     loadingIndicator.classList.add('hidden');
+    console.log('[UI-RENDERER] Loading indicator hidden');
+  } else {
+    console.error('[UI-RENDERER] ❌ Loading indicator element not found');
   }
 }
 
@@ -45,10 +60,14 @@ export function hideLoading(): void {
  * @param message - User-friendly error message to display
  */
 export function showError(message: string): void {
+  console.log('[UI-RENDERER] showError() called with message:', message);
   initializeElements();
   if (errorMessageContainer) {
     errorMessageContainer.textContent = message;
     errorMessageContainer.classList.remove('hidden');
+    console.log('[UI-RENDERER] Error message displayed');
+  } else {
+    console.error('[UI-RENDERER] ❌ Error message container not found');
   }
 }
 
@@ -68,18 +87,21 @@ export function hideError(): void {
  * @param tools - Array of tools to display
  */
 export function renderTools(tools: Tool[]): void {
+  console.log(`[UI-RENDERER] renderTools() called with ${tools.length} tools`);
   initializeElements();
   
   if (!toolsContainer) {
-    console.error('Tools container not found in DOM');
+    console.error('[UI-RENDERER] ❌ Tools container not found in DOM');
     return;
   }
   
+  console.log('[UI-RENDERER] Tools container found, clearing content...');
   // Clear existing content
   toolsContainer.innerHTML = '';
   
   // Check if we have tools to display
   if (tools.length === 0) {
+    console.log('[UI-RENDERER] No tools to display, showing no-results message');
     const noResults = document.createElement('div');
     noResults.className = 'no-results';
     noResults.innerHTML = `
@@ -91,20 +113,28 @@ export function renderTools(tools: Tool[]): void {
     return;
   }
   
+  console.log('[UI-RENDERER] Creating document fragment for tool cards...');
   // Create a document fragment for better performance
   const fragment = document.createDocumentFragment();
   
   // Create a card for each tool
-  tools.forEach(tool => {
+  tools.forEach((tool, index) => {
     const card = createToolCard(tool);
     fragment.appendChild(card);
+    if (index === 0) {
+      console.log('[UI-RENDERER] Sample card created for:', tool.Tools);
+    }
   });
   
+  console.log('[UI-RENDERER] Appending all cards to container...');
   // Append all cards at once
   toolsContainer.appendChild(fragment);
   
+  console.log('[UI-RENDERER] Updating result count...');
   // Update result count
   updateResultCount(tools.length);
+  
+  console.log(`[UI-RENDERER] ✅ Successfully rendered ${tools.length} tools`);
 }
 
 /**

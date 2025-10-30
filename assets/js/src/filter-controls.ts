@@ -26,21 +26,31 @@ let allToolsData: Tool[] = [];
  * @param tools - All tools data for filtering
  */
 export function initializeFilters(tools: Tool[]): void {
+  console.log(`[FILTER-CONTROLS] initializeFilters() called with ${tools.length} tools`);
   allToolsData = tools;
   
   // Extract unique categories and types
+  console.log('[FILTER-CONTROLS] Extracting filter options...');
   const options = extractFilterOptions(tools);
+  console.log('[FILTER-CONTROLS] Filter options extracted:', {
+    categories: options.categories.length,
+    types: options.types.length
+  });
   
   // Populate dropdowns
+  console.log('[FILTER-CONTROLS] Populating dropdowns...');
   populateCategoryDropdown(options.categories);
   populateTypeDropdown(options.types);
   
   // Add event listeners
+  console.log('[FILTER-CONTROLS] Setting up event listeners...');
   setupCategoryFilter();
   setupTypeFilter();
   setupSearchFilter();
   setupBooleanFilters();
   setupClearButton();
+  
+  console.log('[FILTER-CONTROLS] ✅ Filter controls initialized');
 }
 
 /**
