@@ -200,14 +200,14 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T026 [US3] Add type filter dropdown to qa-tools.html: <select id="type-filter"> with "All types" default option
-- [ ] T027 [US3] Update populateFilterDropdowns() in filter-controls.ts to also populate type dropdown with options.types
-- [ ] T028 [US3] Update filterTools() in filter-logic.ts to add type filter condition: check state.selectedType matches tool.Type
-- [ ] T029 [US3] Add type filter event listener in filter-controls.ts: attach change listener, update filterState.selectedType, trigger filter
-- [ ] T030 [US4] Add search box to qa-tools.html: <input type="search" id="tool-search" placeholder="Search by tool name...">
-- [ ] T031 [US4] Update filterTools() in filter-logic.ts to add search condition: case-insensitive partial match on tool.Tools field
-- [ ] T032 [US4] Add search input event listener in filter-controls.ts with 250ms debounce: update filterState.searchQuery, trigger filter after debounce
-- [ ] T033 [US3][US4] Test combined filters: category + type, category + search, type + search, all three together, verify AND logic works correctly
+- [x] T026 [US3] Add type filter dropdown to qa-tools.html: <select id="type-filter"> with "All types" default option
+- [x] T027 [US3] Update populateFilterDropdowns() in filter-controls.ts to also populate type dropdown with options.types
+- [x] T028 [US3] Update filterTools() in filter-logic.ts to add type filter condition: check state.selectedType matches tool.Type
+- [x] T029 [US3] Add type filter event listener in filter-controls.ts: attach change listener, update filterState.selectedType, trigger filter
+- [x] T030 [US4] Add search box to qa-tools.html: <input type="search" id="tool-search" placeholder="Search by tool name...">
+- [x] T031 [US4] Update filterTools() in filter-logic.ts to add search condition: case-insensitive partial match on tool.Tools field
+- [x] T032 [US4] Add search input event listener in filter-controls.ts with 250ms debounce: update filterState.searchQuery, trigger filter after debounce
+- [x] T033 [US3][US4] Test combined filters: category + type, category + search, type + search, all three together, verify AND logic works correctly
 
 **Parallel Execution**: T026-T029 (type filter) can be done in parallel with T030-T032 (search box) until final integration testing (T033).
 
@@ -239,13 +239,13 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T034 [US5] Add boolean filter checkboxes to qa-tools.html: 4 checkboxes with IDs (is-microsoft-filter, is-local-filter, api-filter, quality-gate-filter) and labels
-- [ ] T035 [US5] Update filterTools() in filter-logic.ts to add boolean filter conditions: check each boolean filter, handle null values (exclude from results)
-- [ ] T036 [US5] Add boolean filter event listeners in filter-controls.ts: attach change listeners to all 4 checkboxes, update filterState booleans, trigger filter
-- [ ] T037 [US5] Test boolean filters: test each individually, test combinations, verify null values excluded, verify AND logic with category/type/search
-- [ ] T038 [US6] Add "Clear All Filters" button to qa-tools.html: <button id="clear-filters">Clear All Filters</button>
-- [ ] T039 [US6] Implement clearAllFilters() function in filter-controls.ts: reset filterState to initial values, reset all form controls to defaults, call renderTools with all tools
-- [ ] T040 [US6] Add click event listener to Clear All Filters button in filter-controls.ts: call clearAllFilters()
+- [x] T034 [US5] Add boolean filter checkboxes to qa-tools.html: 4 checkboxes with IDs (is-microsoft-filter, is-local-filter, api-filter, quality-gate-filter) and labels
+- [x] T035 [US5] Update filterTools() in filter-logic.ts to add boolean filter conditions: check each boolean filter, handle null values (exclude from results)
+- [x] T036 [US5] Add boolean filter event listeners in filter-controls.ts: attach change listeners to all 4 checkboxes, update filterState booleans, trigger filter
+- [x] T037 [US5] Test boolean filters: test each individually, test combinations, verify null values excluded, verify AND logic with category/type/search
+- [x] T038 [US6] Add "Clear All Filters" button to qa-tools.html: <button id="clear-filters">Clear All Filters</button>
+- [x] T039 [US6] Implement clearAllFilters() function in filter-controls.ts: reset filterState to initial values, reset all form controls to defaults, call renderTools with all tools
+- [x] T040 [US6] Add click event listener to Clear All Filters button in filter-controls.ts: call clearAllFilters()
 
 **Parallel Execution**: T034-T037 (boolean filters) and T038-T040 (clear button) can be done in parallel.
 
@@ -266,10 +266,10 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T041 Add "No results" handling in ui-renderer.ts: check if filtered tools array is empty, display "No tools found" message with Clear Filters button suggestion
-- [ ] T042 Add result count display to qa-tools.html and update in renderTools(): show "Showing X of 58 tools" text updated on each filter
-- [ ] T043 Update _config.yml header_pages to add qa-tools.html to site navigation menu
-- [ ] T044 Cross-browser testing: test in Chrome, Firefox, Safari, Edge, verify all features work, verify responsive design, verify no console errors, document any issues
+- [x] T041 Add "No results" handling in ui-renderer.ts: check if filtered tools array is empty, display "No tools found" message with Clear Filters button suggestion
+- [x] T042 Add result count display to qa-tools.html and update in renderTools(): show "Showing X of 58 tools" text updated on each filter
+- [x] T043 Update _config.yml header_pages to add qa-tools.html to site navigation menu
+- [x] T044 Cross-browser testing: test in Chrome, Firefox, Safari, Edge, verify all features work, verify responsive design, verify no console errors, document any issues
 
 **Parallel Execution**: T041, T042, T043 can be done in parallel. T044 is final validation.
 

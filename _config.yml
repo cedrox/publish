@@ -17,6 +17,7 @@ plugins:
 header_pages:
   - index.md
   - about.md
+  - qa-tools.html
 
 # Exclude from processing
 exclude:
