@@ -16,6 +16,44 @@ permalink: /qa-tools/
         <option value="">All categories</option>
       </select>
     </div>
+    
+    <div class="filter-group">
+      <label for="type-filter">Type:</label>
+      <select id="type-filter">
+        <option value="">All types</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="tool-search">Search:</label>
+      <input type="search" id="tool-search" placeholder="Search by tool name...">
+    </div>
+    
+    <div class="filter-group filter-group-checkboxes">
+      <label>Filters:</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="is-microsoft-filter">
+          Is Microsoft
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="is-local-filter">
+          Is Local
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="api-filter">
+          Has API
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="quality-gate-filter">
+          Quality Gate
+        </label>
+      </div>
+    </div>
+    
+    <div class="filter-group filter-group-actions">
+      <button id="clear-filters" class="clear-button">Clear All Filters</button>
+    </div>
   </div>
   
   <!-- Loading indicator -->

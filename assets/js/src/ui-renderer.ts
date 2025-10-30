@@ -80,7 +80,14 @@ export function renderTools(tools: Tool[]): void {
   
   // Check if we have tools to display
   if (tools.length === 0) {
-    toolsContainer.innerHTML = '<p class="no-results">No tools found matching your filters.</p>';
+    const noResults = document.createElement('div');
+    noResults.className = 'no-results';
+    noResults.innerHTML = `
+      <p>No tools found matching your filters.</p>
+      <p>Try adjusting your filter criteria or click the "Clear All Filters" button to start over.</p>
+    `;
+    toolsContainer.appendChild(noResults);
+    updateResultCount(0);
     return;
   }
   
@@ -95,6 +102,39 @@ export function renderTools(tools: Tool[]): void {
   
   // Append all cards at once
   toolsContainer.appendChild(fragment);
+  
+  // Update result count
+  updateResultCount(tools.length);
+}
+
+/**
+ * Update the result count display
+ * @param count - Number of tools currently displayed
+ */
+function updateResultCount(count: number): void {
+  let resultCount = document.getElementById('result-count');
+  
+  if (!resultCount) {
+    // Create result count element if it doesn't exist
+    resultCount = document.createElement('div');
+    resultCount.id = 'result-count';
+    resultCount.className = 'result-count';
+    
+    // Insert before tools container
+    const toolsContainer = document.getElementById('tools-container');
+    if (toolsContainer && toolsContainer.parentNode) {
+      toolsContainer.parentNode.insertBefore(resultCount, toolsContainer);
+    }
+  }
+  
+  // Get total count (assuming 58 tools total from spec)
+  const totalTools = 58; // This could be passed as a parameter if dynamic
+  
+  if (count === totalTools) {
+    resultCount.textContent = `Showing all ${totalTools} tools`;
+  } else {
+    resultCount.textContent = `Showing ${count} of ${totalTools} tools`;
+  }
 }
 
 /**
