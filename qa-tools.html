@@ -1,0 +1,36 @@
+---
+layout: page
+title: QA Tools
+permalink: /qa-tools/
+---
+
+<div class="qa-tools-page">
+  <h1>QA Tools Reference</h1>
+  <p class="page-intro">Explore our comprehensive collection of quality assurance tools to enhance your software development workflow.</p>
+  
+  <!-- Filter controls -->
+  <div class="filter-controls">
+    <div class="filter-group">
+      <label for="category-filter">Category:</label>
+      <select id="category-filter">
+        <option value="">All categories</option>
+      </select>
+    </div>
+  </div>
+  
+  <!-- Loading indicator -->
+  <div id="loading-indicator" class="loading hidden">
+    <div class="loading-spinner"></div>
+    <p>Loading tools...</p>
+  </div>
+  
+  <!-- Error message container -->
+  <div id="error-message" class="error hidden"></div>
+  
+  <!-- Tools container -->
+  <div id="tools-container" class="tools-grid">
+    <!-- Tool cards will be dynamically inserted here -->
+  </div>
+</div>
+
+<script type="module" src="/assets/js/dist/main.js"></script>

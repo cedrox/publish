@@ -69,11 +69,11 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T001 Create package.json with TypeScript dependency and build scripts in repository root
-- [ ] T002 Create tsconfig.json with ES2015 target, ES6 modules, outDir assets/js/dist, rootDir assets/js/src
-- [ ] T003 Create directory structure: assets/js/src/ and assets/js/dist/
-- [ ] T004 Create qa-tools.html page in repository root with Jekyll frontmatter (layout: page, title: QA Tools)
-- [ ] T005 Update .github/workflows/build.yml to add Node.js setup, npm install, and TypeScript compilation steps before Jekyll build
+- [x] T001 Create package.json with TypeScript dependency and build scripts in repository root
+- [x] T002 Create tsconfig.json with ES2015 target, ES6 modules, outDir assets/js/dist, rootDir assets/js/src
+- [x] T003 Create directory structure: assets/js/src/ and assets/js/dist/
+- [x] T004 Create qa-tools.html page in repository root with Jekyll frontmatter (layout: page, title: QA Tools)
+- [x] T005 Update .github/workflows/build.yml to add Node.js setup, npm install, and TypeScript compilation steps before Jekyll build
 
 **Parallel Execution**: Tasks T001, T002, T003, T004 can be done in parallel (different files). T005 depends on T001 (needs to know npm script names).
 
@@ -90,10 +90,10 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T006 Create assets/js/src/types.ts with Tool interface (26 fields matching tools.json structure)
-- [ ] T007 [P] Add FilterState interface to assets/js/src/types.ts with category, type, boolean filters, and search query fields
-- [ ] T008 [P] Add FilterOptions interface to assets/js/src/types.ts with categories and types string arrays
-- [ ] T009 Create assets/js/src/main.ts entry point with DOMContentLoaded event listener skeleton
+- [x] T006 Create assets/js/src/types.ts with Tool interface (26 fields matching tools.json structure)
+- [x] T007 [P] Add FilterState interface to assets/js/src/types.ts with category, type, boolean filters, and search query fields
+- [x] T008 [P] Add FilterOptions interface to assets/js/src/types.ts with categories and types string arrays
+- [x] T009 Create assets/js/src/main.ts entry point with DOMContentLoaded event listener skeleton
 
 **Parallel Execution**: T007 and T008 can be done in parallel (same file, different interfaces).
 
@@ -121,15 +121,15 @@ Phase 7: Polish
 
 ### Tasks
 
-- [ ] T010 [US1] Add HTML structure to qa-tools.html: loading indicator div, tools container div with ID
-- [ ] T011 [US1] Add basic CSS to qa-tools.html or assets/css/style.css: CSS Grid layout for tool cards, card styling, loading indicator styles
-- [ ] T012 [P] [US1] Implement loadTools() function in assets/js/src/data-loader.ts: fetch /data/tools.json, parse JSON, return Promise<Tool[]>
-- [ ] T013 [P] [US1] Add error handling to data-loader.ts: catch fetch errors, catch JSON parse errors, throw with user-friendly messages
-- [ ] T014 [P] [US1] Implement showLoading() and hideLoading() functions in assets/js/src/ui-renderer.ts for loading indicator visibility
-- [ ] T015 [P] [US1] Implement renderTools(tools: Tool[]) function in assets/js/src/ui-renderer.ts: create tool cards with name, description, category badge, append to container
-- [ ] T016 [P] [US1] Implement showError(message: string) function in assets/js/src/ui-renderer.ts: display error message in tools container
-- [ ] T017 [US1] Update main.ts to call loadTools(), handle promise: show loading, call renderTools on success, call showError on failure, hide loading
-- [ ] T018 [US1] Compile TypeScript with npm run build and test in browser: verify all 58 tools display, verify no console errors, verify responsive layout
+- [x] T010 [US1] Add HTML structure to qa-tools.html: loading indicator div, tools container div with ID
+- [x] T011 [US1] Add basic CSS to qa-tools.html or assets/css/style.css: CSS Grid layout for tool cards, card styling, loading indicator styles
+- [x] T012 [P] [US1] Implement loadTools() function in assets/js/src/data-loader.ts: fetch /data/tools.json, parse JSON, return Promise<Tool[]>
+- [x] T013 [P] [US1] Add error handling to data-loader.ts: catch fetch errors, catch JSON parse errors, throw with user-friendly messages
+- [x] T014 [P] [US1] Implement showLoading() and hideLoading() functions in assets/js/src/ui-renderer.ts for loading indicator visibility
+- [x] T015 [P] [US1] Implement renderTools(tools: Tool[]) function in assets/js/src/ui-renderer.ts: create tool cards with name, description, category badge, append to container
+- [x] T016 [P] [US1] Implement showError(message: string) function in assets/js/src/ui-renderer.ts: display error message in tools container
+- [x] T017 [US1] Update main.ts to call loadTools(), handle promise: show loading, call renderTools on success, call showError on failure, hide loading
+- [x] T018 [US1] Compile TypeScript with npm run build and test in browser: verify all 58 tools display, verify no console errors, verify responsive layout
 
 **Parallel Execution**: 
 - T012, T013 (data-loader.ts) can be done together
