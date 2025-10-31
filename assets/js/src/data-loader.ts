@@ -13,9 +13,13 @@ export async function loadTools(): Promise<Tool[]> {
   console.log('[DATA-LOADER] Starting to load tools...');
   
   try {
+    // Get the base URL from the page meta tag or fall back to relative path
+    const basePath = document.querySelector('meta[name="base-url"]')?.getAttribute('content') || '';
+    const dataUrl = `${basePath}/data/tools.json`;
+    
     // Fetch the tools.json file
-    console.log('[DATA-LOADER] Fetching /data/tools.json...');
-    const response = await fetch('/data/tools.json');
+    console.log('[DATA-LOADER] Fetching', dataUrl);
+    const response = await fetch(dataUrl);
     console.log('[DATA-LOADER] Fetch response:', {
       ok: response.ok,
       status: response.status,

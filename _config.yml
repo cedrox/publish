@@ -3,8 +3,8 @@ title: Elevating Software Quality
 description: >-
   Discover how AI and modern tools are transforming software quality assurance,
   testing, and development practices for better, faster, and more reliable software.
-baseurl: ""
-url: ""
+baseurl: "/publish"
+url: "https://cedrox.github.io"
 
 # Build settings
 markdown: kramdown
